@@ -1,9 +1,7 @@
 package com.matheusaraujo.estudoDeCaso;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -15,9 +13,10 @@ import com.matheusaraujo.estudoDeCaso.domain.Cidade;
 import com.matheusaraujo.estudoDeCaso.domain.Cliente;
 import com.matheusaraujo.estudoDeCaso.domain.Endereco;
 import com.matheusaraujo.estudoDeCaso.domain.Estado;
+import com.matheusaraujo.estudoDeCaso.domain.ItemPedido;
 import com.matheusaraujo.estudoDeCaso.domain.Pagamento;
-import com.matheusaraujo.estudoDeCaso.domain.PagamentoComCartao;
 import com.matheusaraujo.estudoDeCaso.domain.PagamentoComBoleto;
+import com.matheusaraujo.estudoDeCaso.domain.PagamentoComCartao;
 import com.matheusaraujo.estudoDeCaso.domain.Pedido;
 import com.matheusaraujo.estudoDeCaso.domain.Produto;
 import com.matheusaraujo.estudoDeCaso.domain.enuns.EstadoPagamento;
@@ -27,6 +26,7 @@ import com.matheusaraujo.estudoDeCaso.repository.CidadeRepository;
 import com.matheusaraujo.estudoDeCaso.repository.ClienteRepository;
 import com.matheusaraujo.estudoDeCaso.repository.EnderecoRepository;
 import com.matheusaraujo.estudoDeCaso.repository.EstadoRepository;
+import com.matheusaraujo.estudoDeCaso.repository.ItemPedidoRepository;
 import com.matheusaraujo.estudoDeCaso.repository.PagamentoRepository;
 import com.matheusaraujo.estudoDeCaso.repository.PedidoRepository;
 import com.matheusaraujo.estudoDeCaso.repository.ProdutoRepository;
@@ -58,6 +58,9 @@ public class EstudoDeCasoApplication implements CommandLineRunner {
 	
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(EstudoDeCasoApplication.class, args);
@@ -123,6 +126,18 @@ public class EstudoDeCasoApplication implements CommandLineRunner {
 
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
+		
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+		ItemPedido ip2 = new ItemPedido(ped1, p2, 0.00, 2, 80.00);
+		ItemPedido ip3 = new ItemPedido(ped2, p1, 0.00, 1, 800.00);
+		
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+		
+		p1.getItens().addAll(Arrays.asList(ip1, ip3));
+		p2.getItens().addAll(Arrays.asList(ip2));
+		
+		itemPedidoRepository.saveAll(Arrays.asList(ip1,ip2,ip3));
 		
 		
 	}
