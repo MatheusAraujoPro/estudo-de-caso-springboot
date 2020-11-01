@@ -32,4 +32,10 @@ public class CategoriaService {
 		categoria.setId(null);
 		return categoriaRepository.save(categoria);
 	}
+
+
+	public Categoria Update(Categoria categoria) {		
+		Find(categoria.getId());
+		return categoriaRepository.save(categoria);
+	}
 }
