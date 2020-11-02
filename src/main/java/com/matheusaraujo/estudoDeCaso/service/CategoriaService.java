@@ -3,11 +3,14 @@ package com.matheusaraujo.estudoDeCaso.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.matheusaraujo.estudoDeCaso.domain.Categoria;
 import com.matheusaraujo.estudoDeCaso.repository.CategoriaRepository;
 import com.matheusaraujo.estudoDeCaso.service.exceptions.ObjectNotFoundException;
+import com.matheusaraujo.estudoDeCaso.service.exceptions.DataIntegrityViolationException;
+
 
 @Service
 public class CategoriaService {
@@ -37,5 +40,16 @@ public class CategoriaService {
 	public Categoria Update(Categoria categoria) {		
 		Find(categoria.getId());
 		return categoriaRepository.save(categoria);
+	}
+
+	public void Delete(Integer id) {
+		Find(id);
+		try { 
+			categoriaRepository.deleteById(id);	
+		}catch(DataIntegrityViolationException e) {
+			throw new com.matheusaraujo
+			.estudoDeCaso.service
+			.exceptions.DataIntegrityViolationException("Não é possível excluir uma categoria que tem produtos");
+		}
 	}
 }
