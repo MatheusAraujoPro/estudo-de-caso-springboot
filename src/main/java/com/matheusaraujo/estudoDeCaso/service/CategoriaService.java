@@ -5,11 +5,15 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.matheusaraujo.estudoDeCaso.domain.Categoria;
 import com.matheusaraujo.estudoDeCaso.repository.CategoriaRepository;
 import com.matheusaraujo.estudoDeCaso.service.exceptions.ObjectNotFoundException;
+
 
 
 @Service
@@ -56,5 +60,10 @@ public class CategoriaService {
 
 	public List<Categoria> FindAll() {		
 		return categoriaRepository.findAll();
+	}
+	
+	public Page<Categoria> FindPage(Integer page, Integer linePerPage, String orderBy, String direction){
+		PageRequest pageRequest = PageRequest.of(page, linePerPage, Sort.Direction.valueOf(direction), orderBy);
+		return categoriaRepository.findAll(pageRequest);
 	}
 }
