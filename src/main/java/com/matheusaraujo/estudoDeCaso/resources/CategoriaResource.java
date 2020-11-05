@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +28,7 @@ public class CategoriaResource {
 	
 	@Autowired
 	private CategoriaService categoriaService;
-	
+	//Método Listar
 	@RequestMapping(value = "/{id}" ,method = RequestMethod.GET)
 	public ResponseEntity<Categoria> Find(@PathVariable Integer id) {
 		
@@ -34,9 +36,10 @@ public class CategoriaResource {
 			return ResponseEntity.ok(categoria);
 	}
 	
-	
+	//Método Inserir
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> Insert(@RequestBody Categoria categoria){
+	public ResponseEntity<Void> Insert(@Valid @RequestBody CategoriaDTO categoriaDto){
+		Categoria categoria = categoriaService.fromDto(categoriaDto);
 		categoria = categoriaService.Insert(categoria);
 		
 		URI uri = ServletUriComponentsBuilder
@@ -45,20 +48,23 @@ public class CategoriaResource {
 		
 		return ResponseEntity.created(uri).build();
 	}
-	
+	//Método Atualizar
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<Void> Update(@RequestBody Categoria categoria, @PathVariable Integer id){
+	public ResponseEntity<Void> Update(@Valid @RequestBody CategoriaDTO categoriaDto, @PathVariable Integer id){
+		Categoria categoria = categoriaService.fromDto(categoriaDto);
 		categoria.setId(id);
 		categoria = categoriaService.Update(categoria);
 		return ResponseEntity.noContent().build();
 	}
 	
+	//Método Deletar
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> Delete(@PathVariable Integer id){
 		categoriaService.Delete(id);
 		return ResponseEntity.noContent().build();		
 	}
 	
+	//Método Listar todos
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<CategoriaDTO>> FindAll() {		
 			List<Categoria> categorias = categoriaService.FindAll();
@@ -67,6 +73,7 @@ public class CategoriaResource {
 			return ResponseEntity.ok(categoriasDTOs);
 	}
 	
+	//Método Listar com Paginação
 	@RequestMapping(value = "/page", method = RequestMethod.GET)
 	public ResponseEntity<Page<CategoriaDTO>> FindPage(
 			@RequestParam(value = "page", defaultValue = "0") Integer page, 
