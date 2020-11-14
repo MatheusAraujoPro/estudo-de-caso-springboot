@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.matheusaraujo.estudoDeCaso.DTO.CategoriaDTO;
 import com.matheusaraujo.estudoDeCaso.domain.Categoria;
-import com.matheusaraujo.estudoDeCaso.domain.Categoria;
+
 import com.matheusaraujo.estudoDeCaso.repository.CategoriaRepository;
 import com.matheusaraujo.estudoDeCaso.service.exceptions.ObjectNotFoundException;
 

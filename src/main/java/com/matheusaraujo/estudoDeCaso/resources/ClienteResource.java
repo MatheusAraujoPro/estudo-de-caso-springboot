@@ -1,5 +1,6 @@
 package com.matheusaraujo.estudoDeCaso.resources;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,8 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 
 import com.matheusaraujo.estudoDeCaso.DTO.ClienteDTO;
+import com.matheusaraujo.estudoDeCaso.DTO.ClienteNewDTO;
+
 import com.matheusaraujo.estudoDeCaso.domain.Cliente;
 import com.matheusaraujo.estudoDeCaso.service.ClienteService;
 
@@ -33,12 +38,26 @@ public class ClienteResource {
 			return ResponseEntity.ok(cliente);
 	}
 	
+	//Método Inserir	
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity<Void> Insert(@Valid @RequestBody ClienteNewDTO clienteNewDto){
+		Cliente cliente = clienteService.fromDto(clienteNewDto);
+		cliente = clienteService.Insert(cliente);
+		
+		URI uri = ServletUriComponentsBuilder
+				.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(cliente.getId()).toUri(); 
+		
+		return ResponseEntity.created(uri).build();
+	}
+	
+	
 	//Método Atualizar
 		@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 		public ResponseEntity<Void> Update(@Valid @RequestBody ClienteDTO ClienteDto, @PathVariable Integer id){
-			Cliente Cliente = clienteService.fromDto(ClienteDto);
-			Cliente.setId(id);
-			Cliente = clienteService.Update(Cliente);
+			Cliente cliente = clienteService.fromDto(ClienteDto);
+			cliente.setId(id);
+			cliente = clienteService.Update(cliente);
 			return ResponseEntity.noContent().build();
 		}
 		
