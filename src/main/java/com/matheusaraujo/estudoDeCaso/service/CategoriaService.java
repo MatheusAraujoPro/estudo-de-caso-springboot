@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.matheusaraujo.estudoDeCaso.DTO.CategoriaDTO;
 import com.matheusaraujo.estudoDeCaso.domain.Categoria;
+import com.matheusaraujo.estudoDeCaso.domain.Categoria;
 import com.matheusaraujo.estudoDeCaso.repository.CategoriaRepository;
 import com.matheusaraujo.estudoDeCaso.service.exceptions.ObjectNotFoundException;
 
@@ -43,8 +44,9 @@ public class CategoriaService {
 
 
 	public Categoria Update(Categoria categoria) {		
-		Find(categoria.getId());
-		return categoriaRepository.save(categoria);
+		Categoria newCategoria = Find(categoria.getId());
+		updateData(newCategoria, categoria);
+		return categoriaRepository.save(newCategoria);
 	}
 
 	public void Delete(Integer id) {
@@ -70,5 +72,10 @@ public class CategoriaService {
 	
 	public Categoria fromDto(CategoriaDTO categoriaDto) {
 		return new Categoria(categoriaDto.getId(), categoriaDto.getNome());
+	}
+	
+	private void updateData(Categoria newCategoria, Categoria categoria) {
+		newCategoria.setNome(categoria.getNome());	
+		
 	}
 }
