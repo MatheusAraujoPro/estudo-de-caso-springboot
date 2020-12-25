@@ -2,8 +2,10 @@ package com.matheusaraujo.estudoDeCaso.domain;
 
 import javax.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.matheusaraujo.estudoDeCaso.domain.enuns.EstadoPagamento;
 @Entity
+@JsonTypeName("pagamentoComCartao")
 public class PagamentoComCartao extends Pagamento{
 	private static final long serialVersionUID = 1L;
 	private Integer numeroParcelas;
