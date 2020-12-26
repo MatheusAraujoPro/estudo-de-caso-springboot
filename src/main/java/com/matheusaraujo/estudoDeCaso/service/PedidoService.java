@@ -37,6 +37,9 @@ public class PedidoService {
 	@Autowired
 	private BoletoService boletoService;	
 	
+	@Autowired
+	private ClienteService clienteService;
+	
 	
 	public Pedido Find(Integer id) {
 		Optional<Pedido> pedido = pedidoRepository.findById(id);
@@ -51,6 +54,7 @@ public class PedidoService {
 	@Transactional
 	public Pedido Insert(@Valid Pedido pedido) {
 		pedido.setId(null);
+		pedido.setCliente(clienteService.Find(pedido.getCliente().getId()));
 		pedido.getPagamento().setEstado(EstadoPagamento.PENDENTE);
 		pedido.setInstante(new Date());
 		pedido.getPagamento().setPedido(pedido);
@@ -70,10 +74,12 @@ public class PedidoService {
 		//salvando itens de pedido
 		for(ItemPedido item: pedido.getItens()) {
 			item.setDesconto(0.0);
-			item.setPreco(produtoService.Find(item.getProduto().getId()).getPreco());
+			item.setProduto(produtoService.Find(item.getProduto().getId()));
+			item.setPreco(item.getProduto().getPreco());
 			item.setPedido(pedido);
 		}
 		itemPedidoRepository.saveAll(pedido.getItens());
+		System.out.println(pedido);
 				
 		return pedido;
 	}
